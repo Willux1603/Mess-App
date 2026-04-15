@@ -22,7 +22,15 @@ export function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
     return <Navigate to="/login" replace />
   }
 
-  if (allowedRoles && profile && !allowedRoles.includes(profile.role)) {
+  if (!profile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    )
+  }
+
+  if (allowedRoles && !allowedRoles.includes(profile.role)) {
     return <Navigate to="/" replace />
   }
 

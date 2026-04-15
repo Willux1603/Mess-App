@@ -120,7 +120,11 @@ export function AdminRequestDetail() {
       updates.status = 'cancelled'
     }
 
-    await supabase.from('requests').update(updates).eq('id', request.id)
+    const { error } = await supabase.from('requests').update(updates).eq('id', request.id)
+    if (error) {
+      console.error('Update failed:', error)
+      alert(`Erreur: ${error.message}`)
+    }
     await loadAll()
     setSaving(false)
   }
