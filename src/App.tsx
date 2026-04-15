@@ -6,6 +6,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { LoginPage } from '@/features/auth/LoginPage'
 import { RegisterPage } from '@/features/auth/RegisterPage'
 import { RoleRedirect } from '@/components/shared/RoleRedirect'
+import { ClientDashboard } from '@/features/requests/ClientDashboard'
 import { NewRequestPage } from '@/features/requests/NewRequestPage'
 import { AdminDashboard } from '@/features/admin/AdminDashboard'
 import { AdminRequestDetail } from '@/features/admin/AdminRequestDetail'
@@ -31,6 +32,7 @@ export default function App() {
             <Route element={<AuthGuard><AppLayout /></AuthGuard>}>
               <Route path="/" element={<RoleRedirect />} />
               <Route path="/requests/new" element={<NewRequestPage />} />
+              <Route path="/client-preview" element={<ClientDashboard />} />
               <Route path="/profile" element={<ProfilePage />} />
 
               {/* Admin routes */}

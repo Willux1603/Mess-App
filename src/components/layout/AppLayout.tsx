@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/features/auth/AuthContext'
-import { LogOut, Home, PlusCircle, Settings, List, User } from 'lucide-react'
+import { LogOut, Home, PlusCircle, LayoutDashboard, User, Eye } from 'lucide-react'
 import { LOGO_URL } from '@/lib/constants'
 
 export function AppLayout() {
@@ -24,30 +24,29 @@ export function AppLayout() {
           </Link>
 
           <nav className="flex items-center gap-6">
-            {/* Client nav */}
-            <Link to="/" className={`flex items-center gap-1.5 text-sm transition ${isActive('/')}`}>
-              <Home size={16} />
-              <span className="hidden sm:inline">Accueil</span>
-            </Link>
-
-            <Link to="/requests/new" className={`flex items-center gap-1.5 text-sm transition ${isActive('/requests/new')}`}>
-              <PlusCircle size={16} />
-              <span className="hidden sm:inline">Nouvelle demande</span>
-            </Link>
-
             {/* Admin nav */}
-            {isAdmin && (
-              <Link to="/admin" className={`flex items-center gap-1.5 text-sm transition ${isActive('/admin')}`}>
-                <Settings size={16} />
-                <span className="hidden sm:inline">Administration</span>
-              </Link>
-            )}
-
-            {isAdmin && (
-              <Link to="/admin/requests" className={`flex items-center gap-1.5 text-sm transition ${isActive('/admin/requests')}`}>
-                <List size={16} />
-                <span className="hidden sm:inline">Demandes</span>
-              </Link>
+            {isAdmin ? (
+              <>
+                <Link to="/admin" className={`flex items-center gap-1.5 text-sm transition ${isActive('/admin')}`}>
+                  <LayoutDashboard size={16} />
+                  <span className="hidden sm:inline">Dashboard</span>
+                </Link>
+                <Link to="/client-preview" className={`flex items-center gap-1.5 text-sm transition ${isActive('/client-preview')}`}>
+                  <Eye size={16} />
+                  <span className="hidden sm:inline">Vue client</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/" className={`flex items-center gap-1.5 text-sm transition ${isActive('/')}`}>
+                  <Home size={16} />
+                  <span className="hidden sm:inline">Accueil</span>
+                </Link>
+                <Link to="/requests/new" className={`flex items-center gap-1.5 text-sm transition ${isActive('/requests/new')}`}>
+                  <PlusCircle size={16} />
+                  <span className="hidden sm:inline">Nouvelle demande</span>
+                </Link>
+              </>
             )}
 
             {/* Profile / Logout */}
