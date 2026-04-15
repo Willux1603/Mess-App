@@ -2,10 +2,8 @@ export type UserRole = 'client' | 'admin' | 'technician'
 
 export type RequestStatus =
   | 'draft'
-  | 'submitted'
-  | 'to_process'
+  | 'received'
   | 'assigned'
-  | 'pending'
   | 'completed'
   | 'cancelled'
 

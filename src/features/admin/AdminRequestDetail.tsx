@@ -13,11 +13,9 @@ import {
 import type { Request, Profile, RequestNote } from '@/lib/types'
 
 const STATUS_TRANSITIONS: Record<RequestStatusKey, RequestStatusKey[]> = {
-  draft: ['submitted'],
-  submitted: ['to_process', 'cancelled'],
-  to_process: ['assigned', 'cancelled'],
-  assigned: ['pending', 'completed', 'cancelled'],
-  pending: ['assigned', 'completed', 'cancelled'],
+  draft: ['received'],
+  received: ['assigned', 'cancelled'],
+  assigned: ['completed', 'cancelled'],
   completed: [],
   cancelled: [],
 }
@@ -37,7 +35,7 @@ export function AdminRequestDetail() {
   const [audioEl] = useState(() => typeof Audio !== 'undefined' ? new Audio() : null)
 
   // Editable fields
-  const [editStatus, setEditStatus] = useState<RequestStatusKey>('submitted')
+  const [editStatus, setEditStatus] = useState<RequestStatusKey>('received')
   const [editAssigned, setEditAssigned] = useState<string>('')
   const [editStart, setEditStart] = useState('')
   const [editEnd, setEditEnd] = useState('')
@@ -202,13 +200,13 @@ export function AdminRequestDetail() {
           {/* Quick actions */}
           {!isTerminal && (
             <div className="flex gap-2">
-              {(request.status === 'submitted' || request.status === 'to_process') && (
+              {request.status === 'received' && (
                 <button onClick={() => handleQuickAction('take')} disabled={saving}
                   className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-lg transition disabled:opacity-50">
                   <UserCheck size={14} /> Prendre en charge
                 </button>
               )}
-              {request.status !== 'completed' && request.status !== 'submitted' && (
+              {request.status === 'assigned' && (
                 <button onClick={() => handleQuickAction('complete')} disabled={saving}
                   className="flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition disabled:opacity-50">
                   <CheckCircle2 size={14} /> Terminer

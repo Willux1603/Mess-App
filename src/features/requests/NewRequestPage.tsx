@@ -124,7 +124,7 @@ export function NewRequestPage() {
         needs_tts: form.needs_tts,
         tts_text: form.needs_tts ? form.tts_text : null,
         additional_notes: form.additional_notes || null,
-        status: 'submitted',
+        status: 'received',
         submitted_at: new Date().toISOString(),
       })
       .select('reference')

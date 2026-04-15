@@ -1,9 +1,7 @@
 export const REQUEST_STATUSES = {
   draft: { label: 'Brouillon', color: 'bg-gray-200 text-gray-700' },
-  submitted: { label: 'Soumise', color: 'bg-blue-100 text-blue-700' },
-  to_process: { label: 'À traiter', color: 'bg-orange-100 text-orange-700' },
-  assigned: { label: 'Attribuée', color: 'bg-purple-100 text-purple-700' },
-  pending: { label: 'En attente', color: 'bg-yellow-100 text-yellow-700' },
+  received: { label: 'Reçue', color: 'bg-blue-100 text-blue-700' },
+  assigned: { label: 'Attribuée', color: 'bg-orange-100 text-orange-700' },
   completed: { label: 'Terminée', color: 'bg-green-100 text-green-700' },
   cancelled: { label: 'Annulée', color: 'bg-red-100 text-red-700' },
 } as const

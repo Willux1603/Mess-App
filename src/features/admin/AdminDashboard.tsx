@@ -9,14 +9,12 @@ import type { Request } from '@/lib/types'
 
 type Filter = 'all' | RequestStatusKey
 
-const FILTERS: { key: Filter; label: string }[] = [
-  { key: 'all', label: 'Toutes' },
-  { key: 'submitted', label: 'Soumises' },
-  { key: 'to_process', label: 'À traiter' },
-  { key: 'assigned', label: 'Attribuées' },
-  { key: 'pending', label: 'En attente' },
-  { key: 'completed', label: 'Terminées' },
-  { key: 'cancelled', label: 'Annulées' },
+const FILTERS: { key: Filter; label: string; color: string; activeColor: string }[] = [
+  { key: 'all', label: 'Toutes', color: 'text-dark', activeColor: 'bg-dark text-white' },
+  { key: 'received', label: 'Reçues', color: 'text-blue-600', activeColor: 'bg-blue-600 text-white' },
+  { key: 'assigned', label: 'Attribuées', color: 'text-orange-600', activeColor: 'bg-orange-500 text-white' },
+  { key: 'completed', label: 'Terminées', color: 'text-green-600', activeColor: 'bg-green-600 text-white' },
+  { key: 'cancelled', label: 'Annulées', color: 'text-red-500', activeColor: 'bg-red-500 text-white' },
 ]
 
 export function AdminDashboard() {
@@ -83,13 +81,13 @@ export function AdminDashboard() {
                 onClick={() => setActiveFilter(f.key)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition ${
                   isActive
-                    ? 'bg-primary text-white'
-                    : 'text-muted hover:bg-gray-50 hover:text-dark'
+                    ? f.activeColor
+                    : `${f.color} hover:bg-gray-50`
                 }`}
               >
                 {f.label}
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                  isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-dark'
+                  isActive ? 'bg-white/25 text-white' : 'bg-gray-100 text-dark'
                 }`}>
                   {count}
                 </span>
@@ -150,9 +148,16 @@ export function AdminDashboard() {
                   <span className="mx-1">→</span>
                   <span>{formatDateTime(req.end_datetime)}</span>
                 </div>
-                <span className="text-xs text-muted">
-                  {req.has_audio ? '🎙️ Audio' : req.needs_tts ? '📝 TTS' : ''}
-                </span>
+                {req.has_audio && (
+                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary">
+                    Audio fourni
+                  </span>
+                )}
+                {req.needs_tts && (
+                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-orange-50 text-orange-600">
+                    Texte à enregistrer
+                  </span>
+                )}
               </div>
 
               {/* Right: arrow */}
