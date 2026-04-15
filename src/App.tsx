@@ -8,6 +8,7 @@ import { RegisterPage } from '@/features/auth/RegisterPage'
 import { ClientDashboard } from '@/features/requests/ClientDashboard'
 import { NewRequestPage } from '@/features/requests/NewRequestPage'
 import { AdminDashboard } from '@/features/admin/AdminDashboard'
+import { AdminRequestDetail } from '@/features/admin/AdminRequestDetail'
 import { ProfilePage } from '@/features/profile/ProfilePage'
 
 const queryClient = new QueryClient({
@@ -35,6 +36,7 @@ export default function App() {
               {/* Admin routes */}
               <Route path="/admin" element={<AuthGuard allowedRoles={['admin', 'technician']}><AdminDashboard /></AuthGuard>} />
               <Route path="/admin/requests" element={<AuthGuard allowedRoles={['admin', 'technician']}><AdminDashboard /></AuthGuard>} />
+              <Route path="/admin/requests/:id" element={<AuthGuard allowedRoles={['admin', 'technician']}><AdminRequestDetail /></AuthGuard>} />
             </Route>
 
             {/* Fallback */}
