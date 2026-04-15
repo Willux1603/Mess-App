@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { loginSchema, type LoginFormData } from '@/lib/validators'
 import { LOGO_URL } from '@/lib/constants'
+import type { Profile } from '@/lib/types'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -26,7 +27,7 @@ export function LoginPage() {
     }
 
     setLoading(true)
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email: form.email,
       password: form.password,
     })
@@ -37,7 +38,14 @@ export function LoginPage() {
       return
     }
 
-    navigate('/')
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', authData.user.id)
+      .single()
+
+    const role = (profile as Profile | null)?.role
+    navigate(role === 'admin' || role === 'technician' ? '/admin' : '/')
   }
 
   return (
