@@ -44,20 +44,22 @@ Mess-App/
     │   └── validators.ts       # Schémas Zod (login, register, request, audio)
     ├── components/
     │   ├── layout/
-    │   │   └── AppLayout.tsx   # Layout principal (header, nav, logo)
+    │   │   └── AppLayout.tsx   # Layout principal (header, nav conditionnelle par rôle)
     │   └── shared/
-    │       └── StatusBadge.tsx  # Badge coloré par statut
+    │       ├── StatusBadge.tsx  # Badge coloré par statut
+    │       └── RoleRedirect.tsx # Redirection auto admin→/admin, client→dashboard
     └── features/
         ├── auth/
         │   ├── AuthContext.tsx  # Contexte React (session, profil, signOut)
-        │   ├── AuthGuard.tsx   # Protection de routes par rôle
-        │   ├── LoginPage.tsx   # Page de connexion
+        │   ├── AuthGuard.tsx   # Protection de routes par rôle + attente profil
+        │   ├── LoginPage.tsx   # Connexion + redirection auto par rôle
         │   └── RegisterPage.tsx # Page d'inscription
         ├── requests/
         │   ├── ClientDashboard.tsx  # Dashboard client (liste des demandes)
         │   └── NewRequestPage.tsx   # Formulaire multi-étapes (form → recap → success)
         ├── admin/
-        │   └── AdminDashboard.tsx   # Panel admin (stats, filtres, assignation)
+        │   ├── AdminDashboard.tsx       # Dashboard admin (liste, filtres par statut, recherche)
+        │   └── AdminRequestDetail.tsx   # Détail/édition demande (actions, notes, audio)
         └── profile/
             └── ProfilePage.tsx      # Page de profil utilisateur
 ```
@@ -71,7 +73,7 @@ Mess-App/
 | Enum | Valeurs |
 |------|---------|
 | `user_role` | `client`, `admin`, `technician` |
-| `request_status` | `draft`, `submitted`, `to_process`, `assigned`, `pending`, `completed`, `cancelled` |
+| `request_status` | `draft`, `received`, `assigned`, `completed`, `cancelled` |
 
 ### Tables
 
@@ -166,16 +168,29 @@ Toutes les tables ont RLS activé :
 
 ### Statuts et cycle de vie
 ```
-draft → submitted → to_process → assigned → pending → completed
-                                                   ↘ cancelled
+draft → received → assigned → completed
+                            ↘ cancelled
 ```
+| Statut | Label | Couleur | Description |
+|--------|-------|---------|-------------|
+| `draft` | Brouillon | Gris | Demande en cours de rédaction |
+| `received` | Reçue | Bleu | Demande soumise par le client |
+| `assigned` | Attribuée | Orange | Prise en charge par un technicien |
+| `completed` | Terminée | Vert | Traitement terminé |
+| `cancelled` | Annulée | Rouge | Demande annulée |
 
 ### Rôles
 | Rôle | Droits |
 |------|--------|
 | `client` | Créer/voir ses demandes, modifier son profil |
-| `admin` | Voir toutes les demandes, changer statut, assigner, filtrer |
+| `admin` | Dashboard admin, voir toutes les demandes, changer statut, assigner, notes internes |
 | `technician` | Idem admin (traitement technique) |
+
+### Navigation par rôle
+| Rôle | Menu | Redirection login |
+|------|------|-------------------|
+| `client` | Accueil, Nouvelle demande, Profil | `/` |
+| `admin` / `technician` | Dashboard, Vue client, Profil | `/admin` |
 
 ---
 
@@ -225,19 +240,24 @@ npm run preview
 - [x] Schéma BDD + RLS + triggers
 - [x] Storage audio + assets
 - [x] Auth (login, register, contexte, guard)
-- [x] Layout Konectik (header, nav, logo)
+- [x] Redirection auto par rôle au login
+- [x] Layout Konectik (header, nav conditionnelle par rôle)
 - [x] Dashboard client (liste demandes)
 - [x] Formulaire nouvelle demande (multi-étapes)
-- [x] Panel admin (stats, filtres, statuts, assignation)
+- [x] Dashboard admin (liste, filtres par statut avec couleurs, recherche)
+- [x] Page détail demande admin (édition période, statut, assignation)
+- [x] Actions rapides (Prendre en charge, Terminer, Annuler)
+- [x] Notes internes entre admins/techniciens
+- [x] Lecteur audio intégré pour les admins
+- [x] Statuts simplifiés (Reçue, Attribuée, Terminée, Annulée)
+- [x] Vue client accessible aux admins (/client-preview)
 - [x] Page profil
 - [x] Push GitHub
 
 ### V1.1 (à venir)
-- [ ] Page détail d'une demande (client + admin)
-- [ ] Notes internes sur une demande
 - [ ] Historique des changements de statut
 - [ ] Notifications par email (Edge Functions)
-- [ ] Lecteur audio intégré pour les admins
+- [ ] Page détail demande côté client
 
 ### V2
 - [ ] Intégration Microsoft 365 (calendrier)
